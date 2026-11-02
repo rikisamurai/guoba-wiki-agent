@@ -59,4 +59,5 @@ DEEPSEEK_API_KEY=sk-... pnpm test:live
 - [`GLOSSARY.md`](GLOSSARY.md)：领域术语
 - [`docs/adr/`](docs/adr/README.md)：架构决策记录
 - [`docs/plan/v1.md`](docs/plan/v1.md)：v1 实施计划
+- [`docs/handoff.md`](docs/handoff.md)：当前进度、真实运行记录、下一步与已知问题
 - [`fixtures/README.md`](fixtures/README.md)：测试 Vault 的来源与改动
