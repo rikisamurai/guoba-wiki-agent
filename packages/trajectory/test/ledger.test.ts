@@ -55,6 +55,10 @@ describe('normal completion', () => {
           }),
       },
     )
+    r.emit('proposal/diff', {
+      turn: 0,
+      files: [{ path: 'wiki/a.md', created: true, diff: '--- /dev/null\n+++ b/wiki/a.md\n' }],
+    })
     r.emit('turn/end', { turn: 0, reason: 'finished' })
     r.emit('review/decision', { turn: 0, choice: 'y' })
     r.emit('apply/result', {
@@ -76,6 +80,7 @@ describe('normal completion', () => {
       'review',
     ])
     expect(ledger.end).toEqual({ reason: 'applied', at: run.events.at(-1)?.time })
+    expect(ledger.turns[0]?.proposal?.map((file) => file.path)).toEqual(['wiki/a.md'])
   })
 
   it('derives TTFT, decode time and tool durations from event times', () => {

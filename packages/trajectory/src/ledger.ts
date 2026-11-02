@@ -48,6 +48,8 @@ export interface TurnView {
   endedAt?: number
   reason?: TurnEndReason
   entries: TurnEntry[]
+  /** 这个 Turn 结束时 Staging 的全部变更。 */
+  proposal?: TrajectoryEventMap['proposal/diff']['files']
 }
 
 export interface Ledger {
@@ -170,6 +172,9 @@ export function buildLedger(events: readonly AnyTrajectoryEvent[]): Ledger {
         break
       case 'validation/result':
         stepOf(event.data.turn, event.data.step, at).validations.push({ ...event.data, at })
+        break
+      case 'proposal/diff':
+        turnOf(event.data.turn, at).proposal = event.data.files
         break
       case 'review/decision':
         turnOf(event.data.turn, at).entries.push({

@@ -129,6 +129,8 @@ export interface TrajectoryEventMap {
     bytes: number
   }
   'validation/result': StepRef & { attempt: number; invariants: Finding[]; warnings: Finding[] }
+  /** 每个 Turn 结束时 Staging 相对 Vault 的全部变更；查看器与 proposal.diff 都从这里取。 */
+  'proposal/diff': { turn: number; files: { path: string; created: boolean; diff: string }[] }
   'review/decision': { turn: number; choice: 'y' | 'n' | 'r'; feedback?: string }
   'apply/result': {
     written: string[]
@@ -156,6 +158,7 @@ export const TRAJECTORY_EVENT_TYPES: ReadonlySet<string> = new Set<TrajectoryEve
   'tool/result',
   'staging/write',
   'validation/result',
+  'proposal/diff',
   'review/decision',
   'apply/result',
   'limit/hit',
