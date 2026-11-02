@@ -38,7 +38,7 @@
 | `tool/call`               | callId、工具名、arguments 的 JSON 字符串（Pi 只暴露解析后的参数对象，拿不到模型原样输出的文本）                                                 | `tool/call`                                   |
 | `tool/result`             | 模型看到的结果、isError、durationMs、Staging 变更摘要                                                                                           | `tool/result`（`meta`）                       |
 | `staging/write`           | 路径、操作（write / edit / append）、写入前后的 hash、字节数                                                                                    | 类似 `workspace/changes`                      |
-| `validation/result`       | 第几次 Finish、Invariant 与 Warning 明细                                                                                                        | 无                                            |
+| `validation/result`       | 第几次 Finish、Invariant 与 Warning 明细，以及 Finish 的判定（通过 / Warning 回传 / Invariant 回传 / 次数用完，M5 补充）                        | 无                                            |
 | `proposal/diff`           | 每个 Turn 结束时 Staging 的全部变更（逐文件 diff）。`staging/write` 只记 hash，无法还原内容，查看器和 `proposal.diff` 都从这个事件取            | 无                                            |
 | `review/decision`         | `y` / `n` / `r`，以及 Revise 意见                                                                                                               | 类似 `approval/decided`                       |
 | `apply/result`            | 已写入的文件、hash 冲突、写入失败                                                                                                               | 无                                            |

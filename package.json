@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:live": "vitest run --config vitest.live.config.ts",
     "typecheck": "pnpm -r typecheck",
-    "wiki-agent": "node apps/cli/src/main.ts"
+    "wiki-agent": "node apps/cli/src/main.ts",
+    "build:viewer": "pnpm --filter @guoba-wiki-agent/viewer build",
+    "test:e2e": "pnpm --filter @guoba-wiki-agent/viewer test:e2e"
   },
   "devDependencies": {
     "@guoba-wiki-agent/agent": "workspace:*",

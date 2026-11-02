@@ -4,6 +4,6 @@ import { defineConfig } from 'vitest/config'
 // 真模型冒烟测试使用 *.live.ts 命名，不匹配默认 include，只由 vitest.live.config.ts 运行。
 export default defineConfig({
   test: {
-    projects: ['packages/*', 'apps/cli'],
+    projects: ['packages/*', 'apps/cli', 'apps/viewer'],
   },
 })

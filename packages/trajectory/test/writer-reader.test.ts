@@ -4,7 +4,7 @@ import path from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
-import { TrajectoryFormatError, parseTrajectory } from '../src/index.ts'
+import { TrajectoryFormatError, parseTrajectory, parseTrajectoryLine } from '../src/index.ts'
 import { createTrajectoryWriter, readTrajectoryFile } from '../src/node/index.ts'
 
 const tmpFile = () =>
@@ -98,5 +98,13 @@ describe('parseTrajectory', () => {
     createTrajectoryWriter(file).close()
     writeFileSync(file, `${JSON.stringify({ type: 'turn/start', seq: 0, time: 0, data: 1 })}\n`)
     expect(() => readTrajectoryFile(file)).toThrow(/data must be an object/)
+  })
+})
+
+describe('parseTrajectoryLine', () => {
+  it('parses one event with the same envelope checks', () => {
+    expect(parseTrajectoryLine(line(7).trimEnd(), 8)).toMatchObject({ type: 'turn/start', seq: 7 })
+    expect(() => parseTrajectoryLine(line(0, 'nope'), 1)).toThrow(/unknown event type/)
+    expect(() => parseTrajectoryLine('{', 3)).toThrow(TrajectoryFormatError)
   })
 })

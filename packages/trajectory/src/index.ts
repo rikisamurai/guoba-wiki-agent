@@ -11,5 +11,10 @@ export {
   allSteps,
   buildLedger,
 } from './ledger.ts'
-export { type ParsedTrajectory, TrajectoryFormatError, parseTrajectory } from './parse.ts'
+export {
+  type ParsedTrajectory,
+  TrajectoryFormatError,
+  parseTrajectory,
+  parseTrajectoryLine,
+} from './parse.ts'
 export { type RunSummary, summarizeLedger, summarizeRun } from './summary.ts'

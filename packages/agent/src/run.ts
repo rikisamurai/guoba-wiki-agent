@@ -185,6 +185,7 @@ export class Run {
       ...this.#p.recorder.step,
       attempt: verdict.attempt,
       ...verdict.validation,
+      verdict: verdict.kind,
     })
     if (verdict.kind === 'pass') this.#outcome ??= { status: 'ready' }
     if (verdict.kind === 'failed') this.#outcome ??= { status: 'invariant_failed' }

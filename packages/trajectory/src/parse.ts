@@ -47,6 +47,20 @@ export function parseTrajectory(text: string): ParsedTrajectory {
   return { events, truncatedTail }
 }
 
+/**
+ * 解析单独一行（例如 SSE 收到的一条消息），校验规则与 parseTrajectory 相同。
+ * seq 是否连续由调用方检查。
+ */
+export function parseTrajectoryLine(line: string, lineNumber: number): AnyTrajectoryEvent {
+  let value: unknown
+  try {
+    value = JSON.parse(line)
+  } catch (error) {
+    throw new TrajectoryFormatError(`line ${lineNumber}: invalid JSON (${String(error)})`)
+  }
+  return toEvent(value, lineNumber)
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }

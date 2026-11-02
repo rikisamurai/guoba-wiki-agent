@@ -2,7 +2,7 @@
 
 基于 [Pi](https://github.com/earendil-works/pi) 的个人知识库 Agent：按 [ai-wiki](https://github.com/rikisamurai/ai-wiki) 中的 Agent Skill 把原料沉淀为互链的 wiki 页面。改动先写进内存里的 Staging，在终端确认后才写入 Vault；每次运行都记录完整的 Trajectory，可以在本地网页里回放。
 
-> 状态：v1 开发中。`wiki-agent run` 与 `wiki-agent view`（接口）已可用，查看器页面尚未实现，进度见 [`docs/plan/v1.md`](docs/plan/v1.md)。
+> 状态：v1 开发中。`wiki-agent run` 与 `wiki-agent view` 已可用，下一步是用真实 Source 验收，进度见 [`docs/plan/v1.md`](docs/plan/v1.md)。
 
 ## 一次 Ingest 会发生什么
 
@@ -23,6 +23,7 @@ wiki-agent run sources/posts/xxx.md
 
 ```bash
 pnpm install
+pnpm build:viewer                          # 构建查看器页面，只需一次（更新代码后重新构建）
 export DEEPSEEK_API_KEY=sk-...
 pnpm wiki-agent run sources/posts/xxx.md   # 路径相对 Vault，也可以是 Vault 内的绝对路径
 pnpm wiki-agent view                       # 另开终端，http://127.0.0.1:5050
@@ -31,6 +32,7 @@ pnpm wiki-agent view                       # 另开终端，http://127.0.0.1:505
 - 运行中显示每个 Step 的工具调用和 Finish 校验结果；结束后显示变更摘要、Warning 和逐文件 diff，然后选择 `y` 写入、`n` 放弃、`r` 输入修改意见继续改。
 - Ctrl-C 随时中止，Vault 不变。
 - 写入后不做 git 提交，请在 Vault 中检查后自行提交。
+- 查看器里可以看到 Run 列表，以及每次 Run 的流水账（每个 Step 的思考、工具参数与结果）、时间线、变更 diff 和模型收到的 system prompt；Run 进行中打开会实时追加。
 - 每次 Run 的记录在 `.runs/<runId>/`（`trajectory.jsonl`、`result.json`、`proposal.diff`），含 Vault 全文与模型 reasoning，已被 git 忽略。
 - 需要经 `HTTPS_PROXY` 访问 DeepSeek 时，加上 `NODE_USE_ENV_PROXY=1`（Node 的 `fetch` 默认不读代理环境变量）。
 
@@ -41,6 +43,7 @@ pnpm wiki-agent view                       # 另开终端，http://127.0.0.1:505
 ```bash
 pnpm install
 pnpm test        # faux 假模型与单元测试，不需要 API Key
+pnpm test:e2e    # 查看器的 Playwright 端到端测试
 pnpm typecheck
 pnpm lint
 ```

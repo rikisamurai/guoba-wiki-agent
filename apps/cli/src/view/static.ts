@@ -13,7 +13,7 @@ const CONTENT_TYPES: Record<string, string> = {
   '.woff2': 'font/woff2',
 }
 
-const NOT_BUILT = `wiki-agent view：查看器页面尚未构建（docs/plan/v1.md M5）。
+const NOT_BUILT = `wiki-agent view：查看器页面尚未构建。在仓库根目录运行 pnpm build:viewer 后刷新。
 
 数据接口：
   GET /api/runs

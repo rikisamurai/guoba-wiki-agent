@@ -36,9 +36,15 @@ describe('Finish', () => {
     expect(feedback.text).toContain('[[原文直出]] 指向的页面不存在')
     expect(result.status).toBe('ready')
     const validations = events().filter((event) => event.type === 'validation/result')
-    expect(validations.map((event) => [event.data.attempt, event.data.invariants.length])).toEqual([
-      [1, 1],
-      [2, 0],
+    expect(
+      validations.map((event) => [
+        event.data.attempt,
+        event.data.invariants.length,
+        event.data.verdict,
+      ]),
+    ).toEqual([
+      [1, 1, 'retry'],
+      [2, 0, 'pass'],
     ])
   })
 

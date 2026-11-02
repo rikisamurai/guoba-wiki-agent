@@ -208,6 +208,7 @@ describe('Revise across Turns', () => {
   it('counts wall time including the review wait', () => {
     const summary = summarizeRun(run.events)
     expect(summary.turns).toBe(2)
+    expect(summary.startedAt).toBe(T0)
     expect(summary.durationMs).toBe((run.events.at(-1)?.time ?? 0) - T0)
     expect(summary.durationMs).toBeGreaterThan(60_000)
   })

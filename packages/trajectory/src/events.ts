@@ -128,7 +128,16 @@ export interface TrajectoryEventMap {
     afterHash: string
     bytes: number
   }
-  'validation/result': StepRef & { attempt: number; invariants: Finding[]; warnings: Finding[] }
+  'validation/result': StepRef & {
+    attempt: number
+    invariants: Finding[]
+    warnings: Finding[]
+    /**
+     * Finish 的判定（ADR 0007）：pass 通过；warnings 只有 Warning，回传模型提示一次；
+     * retry Invariant 未通过，回传修正；failed 修正次数用完。M5 起记录，更早的 Trajectory 没有。
+     */
+    verdict?: 'pass' | 'warnings' | 'retry' | 'failed'
+  }
   /** 每个 Turn 结束时 Staging 相对 Vault 的全部变更；查看器与 proposal.diff 都从这里取。 */
   'proposal/diff': { turn: number; files: { path: string; created: boolean; diff: string }[] }
   'review/decision': { turn: number; choice: 'y' | 'n' | 'r'; feedback?: string }

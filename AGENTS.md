@@ -142,7 +142,9 @@ pnpm typecheck
 pnpm lint
 pnpm fmt
 pnpm wiki-agent run <source>   # 需要 DEEPSEEK_API_KEY；执行策略在 wiki-agent.config.ts
+pnpm build:viewer              # wiki-agent view 提供的页面来自 apps/viewer/dist
 pnpm wiki-agent view
+pnpm test:e2e                  # 查看器 Playwright 测试
 ```
 
 ## Agent skills

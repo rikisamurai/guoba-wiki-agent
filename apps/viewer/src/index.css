@@ -1,1 +1,102 @@
 @import 'tailwindcss';
+
+/*
+ * 设计稿（M5，已确认）的配色：偏冷的中性灰 + 墨蓝强调（选中、生成段、写入类工具）；
+ * 语义色只用于结果与 Warning。跟随系统明暗主题。
+ */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-bg: var(--accent-bg);
+  --color-ok: var(--ok);
+  --color-ok-bg: var(--ok-bg);
+  --color-warn: var(--warn);
+  --color-warn-bg: var(--warn-bg);
+  --color-bad: var(--bad);
+  --color-bad-bg: var(--bad-bg);
+  --color-add-bg: var(--add-bg);
+  --color-del-bg: var(--del-bg);
+  --font-sans:
+    'IBM Plex Sans', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei',
+    system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SF Mono', ui-monospace, Menlo, Consolas, 'PingFang SC', monospace;
+  --animate-slide: slide 1.4s ease-in-out infinite;
+
+  @keyframes slide {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(250%);
+    }
+  }
+}
+
+:root {
+  --bg: #f4f5f8;
+  --surface: #ffffff;
+  --sunken: #eceef3;
+  --line: #d9dde5;
+  --line-soft: #e7e9ef;
+  --fg: #161a22;
+  --muted: #5a6273;
+  --faint: #8b93a3;
+  --accent: #2950b8;
+  --accent-bg: #e7edfa;
+  --ok: #1d7448;
+  --ok-bg: #e1f2e8;
+  --warn: #9a5800;
+  --warn-bg: #fcefd8;
+  --bad: #b3261e;
+  --bad-bg: #fbe6e4;
+  --add-bg: #e6f4ea;
+  --del-bg: #fbe9e7;
+  --hatch: #c6ccd8;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1015;
+    --surface: #151920;
+    --sunken: #1c2129;
+    --line: #2a303b;
+    --line-soft: #222832;
+    --fg: #e5e8ee;
+    --muted: #9aa2b1;
+    --faint: #6c7483;
+    --accent: #86a6ff;
+    --accent-bg: #1b2643;
+    --ok: #57c891;
+    --ok-bg: #132c1f;
+    --warn: #f0b252;
+    --warn-bg: #33250d;
+    --bad: #ff8577;
+    --bad-bg: #391815;
+    --add-bg: #142a1c;
+    --del-bg: #351a17;
+    --hatch: #3a414e;
+    color-scheme: dark;
+  }
+}
+
+/* 等待首字的斜纹 */
+@utility hatch {
+  background: repeating-linear-gradient(135deg, var(--hatch) 0 2px, transparent 2px 4px);
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-fg font-sans text-[13px] leading-normal antialiased;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}

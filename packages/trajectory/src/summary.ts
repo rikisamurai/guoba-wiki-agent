@@ -6,6 +6,8 @@ export interface RunSummary {
   runId: string | null
   taskSkill: string | null
   source: string | null
+  /** 第一个事件（run/start）的时间戳。 */
+  startedAt: number | null
   /** 没有 run/end 时为 incomplete（进行中，或进程中途退出）。 */
   reason: RunEndReason | 'incomplete'
   turns: number
@@ -60,6 +62,7 @@ export function summarizeLedger(ledger: Ledger, events: readonly AnyTrajectoryEv
     runId: ledger.start?.runId ?? null,
     taskSkill: ledger.start?.taskSkill ?? null,
     source: ledger.start?.source ?? null,
+    startedAt: first?.time ?? null,
     reason: ledger.end?.reason ?? 'incomplete',
     turns: ledger.turns.length,
     steps: steps.length,
