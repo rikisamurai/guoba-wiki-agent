@@ -42,7 +42,7 @@
 | `review/decision`         | `y` / `n` / `r`，以及 Revise 意见                                                                                                               | 类似 `approval/decided`                       |
 | `apply/result`            | 已写入的文件、hash 冲突、写入失败                                                                                                               | 无                                            |
 | `limit/hit`               | 触发了哪个上限，以及当时的累计值                                                                                                                | 无                                            |
-| `run/end`                 | 停止原因、合计 Step 数、token、费用、耗时                                                                                                       | 无                                            |
+| `run/end`                 | 停止原因。合计 Step 数、token、费用、耗时由投影从前面的事件算出，不在这里重复存储，避免出现两个真源                                             | 无                                            |
 
 - 时间信息都是本进程收到事件时的时钟时间。TTFT 等于 Step 开始到收到第一个 delta 的时间差；解码耗时、工具耗时（Pi 1.1 起提供 `durationMs`）都从事件时间推算，不额外记录。
 - pi-ai 在 provider 内部的重试，只在能观察到的范围内记录为 `assistant/attempt`（通过 `onProviderStreamEvent` 等钩子）。观察不到的，不伪造记录。
