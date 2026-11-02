@@ -11,7 +11,7 @@ const MAX_NEW_PAGES = 15
 
 export interface IngestWarningContext {
   links: LinkIndex
-  /** Vault 中已有 Wiki Page 的目录，例如 `frontend/ui-libraries`。 */
+  /** Task Skill 列出的 Wiki Page 目录，例如 `frontend/ui-libraries`（见 skillDomains）。 */
   domains: ReadonlySet<string>
 }
 
@@ -51,21 +51,30 @@ export function checkIngestWarnings(
     if (outlinks < MIN_OUTLINKS)
       add('min-outlinks', `只有 ${outlinks} 条出链，至少需要 ${MIN_OUTLINKS} 条`, page.path)
 
-    const domain = path.posix.dirname(page.path).slice('wiki/'.length)
-    if (page.base === null && !context.domains.has(domain)) {
-      add('new-domain', `${domain} 是新的 Domain，Skill 的目录列表里没有`, page.path)
+    // 新页面必须放在 Skill 列出的目录内（ADR 0006）。读不到目录列表时不检查，避免每个页面都误报
+    const dir = path.posix.dirname(page.path).slice('wiki/'.length)
+    if (page.base === null && context.domains.size > 0 && !isListed(dir, context.domains)) {
+      add('new-domain', `${dir} 不在 Skill 列出的目录里`, page.path)
     }
   }
   return findings
 }
 
-/** Vault 中已有 Wiki Page 所在的目录。 */
-export function wikiDomains(files: Iterable<string>): Set<string> {
+/**
+ * Task Skill 中列出的 Wiki Page 目录，即形如 ``- `frontend/web-platform/`：运行时与 DOM API`` 的行。
+ * 目录本身和它的子目录都算在列表内。
+ */
+export function skillDomains(skillText: string): Set<string> {
   const domains = new Set<string>()
-  for (const file of files) {
-    if (isWikiPage(file)) domains.add(path.posix.dirname(file).slice('wiki/'.length))
+  for (const match of skillText.matchAll(/^\s*-\s+`([\w-]+(?:\/[\w-]+)*)\/`[：:]/gm)) {
+    if (match[1]) domains.add(match[1])
   }
   return domains
+}
+
+function isListed(dir: string, domains: ReadonlySet<string>): boolean {
+  for (const domain of domains) if (dir === domain || dir.startsWith(`${domain}/`)) return true
+  return false
 }
 
 function isWikiPage(file: string): boolean {

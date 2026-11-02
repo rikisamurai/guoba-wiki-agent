@@ -1,6 +1,6 @@
 import { Agent, type AgentTool, type AgentTurnContext } from '@earendil-works/pi-agent-core'
 import type { RunEndReason } from '@guoba-wiki-agent/trajectory'
-import { type ApplyResult, type Change, applyProposal } from '@guoba-wiki-agent/vault'
+import { type ApplyResult, type Change, applyProposal, skillDomains } from '@guoba-wiki-agent/vault'
 
 import { writeRunArtifacts } from './artifacts.ts'
 import { Budget, type LimitHit } from './budget.ts'
@@ -50,9 +50,8 @@ export class Run {
     this.#p = prepared
     this.id = prepared.runId
     this.dir = prepared.runDir
-    this.#gate = new FinishGate(() =>
-      validateStaging(prepared.staging, prepared.task, prepared.options.config.vault),
-    )
+    const domains = skillDomains(prepared.skills.task.body)
+    this.#gate = new FinishGate(() => validateStaging(prepared.staging, prepared.task, domains))
     this.#budget = new Budget(prepared.task.limits)
     const { recorder, staging, skills } = prepared
     const tools: AgentTool<any>[] = [

@@ -1,13 +1,28 @@
+import { readFileSync } from 'node:fs'
+import path from 'node:path'
+
 import { describe, expect, it } from 'vitest'
 
-import { Staging, checkIngestWarnings, createLinkIndex, wikiDomains } from '../src/index.ts'
-import { FLASH_LIST, INGEST_SCOPE, OVERLAY, copyFixtureVault, wikiPage } from './helpers.ts'
+import { Staging, checkIngestWarnings, createLinkIndex, skillDomains } from '../src/index.ts'
+import {
+  FIXTURE_VAULT,
+  FLASH_LIST,
+  INGEST_SCOPE,
+  OVERLAY,
+  copyFixtureVault,
+  wikiPage,
+} from './helpers.ts'
+
+const INGEST_SKILL = readFileSync(
+  path.join(FIXTURE_VAULT, '.agents/skills/ingest/SKILL.md'),
+  'utf8',
+)
 
 function warn(staging: Staging) {
   const files = staging.list()
   return checkIngestWarnings(staging.changes(), {
     links: createLinkIndex(files),
-    domains: wikiDomains(new Staging(copyFixtureVault()).list()),
+    domains: skillDomains(INGEST_SKILL),
   })
 }
 
@@ -54,10 +69,21 @@ describe('checkIngestWarnings', () => {
     expect(rules(staging)).toEqual([`min-outlinks:${FLASH_LIST}`])
   })
 
-  it('flags a page created in a new Domain', () => {
+  it('accepts a page in a directory the Skill lists, even if the Vault has no page there yet (ADR 0006)', () => {
     const staging = new Staging(copyFixtureVault(), INGEST_SCOPE)
     staging.write('wiki/obsidian/a.md', wikiPage(['overlayscrollbars', 'flash-list']))
-    expect(rules(staging)).toEqual(['new-domain:wiki/obsidian/a.md'])
+    staging.write('wiki/retrieval/browser/b.md', wikiPage(['overlayscrollbars', 'flash-list']))
+    expect(warn(staging)).toEqual([])
+  })
+
+  it('flags a page created outside the directories the Skill lists', () => {
+    const staging = new Staging(copyFixtureVault(), INGEST_SCOPE)
+    staging.write('wiki/cooking/a.md', wikiPage(['overlayscrollbars', 'flash-list']))
+    staging.write('wiki/frontend/a.md', wikiPage(['overlayscrollbars', 'flash-list']))
+    expect(warn(staging).map((finding) => finding.message)).toEqual([
+      'cooking 不在 Skill 列出的目录里',
+      'frontend 不在 Skill 列出的目录里',
+    ])
   })
 
   it('mentions frontmatter that was already unparseable', () => {
@@ -81,5 +107,16 @@ describe('checkIngestWarnings', () => {
       )
     }
     expect(rules(staging)).toEqual(['max-pages:'])
+  })
+})
+
+describe('skillDomains', () => {
+  it('reads the directory list of the ingest Skill', () => {
+    const domains = skillDomains(INGEST_SKILL)
+    expect(domains).toContain('skills')
+    expect(domains).toContain('obsidian')
+    expect(domains).toContain('retrieval/browser')
+    expect(domains).toContain('agent-engineering/philosophy')
+    expect(domains).not.toContain('frontend')
   })
 })
