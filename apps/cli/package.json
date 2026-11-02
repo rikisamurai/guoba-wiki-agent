@@ -1,0 +1,21 @@
+{
+  "name": "@guoba-wiki-agent/cli",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "wiki-agent": "./src/main.ts"
+  },
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@guoba-wiki-agent/agent": "workspace:*",
+    "@guoba-wiki-agent/trajectory": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

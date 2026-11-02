@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "sortPackageJson": true,
+  "sortImports": true,
+  "sortTailwindcss": {
+    "functions": ["cn"]
+  },
+  "ignorePatterns": ["fixtures/**", ".runs/**", ".agents/**", ".claude/**"]
+}

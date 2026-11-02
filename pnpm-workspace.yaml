@@ -1,0 +1,18 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+
+# Pi 依赖锁定精确版本（ADR 0002），其余共享依赖在这里统一版本。
+catalog:
+  '@earendil-works/pi-agent-core': 1.4.0
+  '@earendil-works/pi-ai': 1.4.0
+  '@types/node': ^24.19.2
+  typescript: ^5.9.3
+  vitest: ^5.0.5
+
+allowBuilds:
+  esbuild: true
+  simple-git-hooks: true
+  # Pi 的传递依赖，只有 Google provider 用到，本项目不使用
+  '@google/genai': false
+  protobufjs: false

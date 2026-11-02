@@ -1,0 +1,75 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
+
+# Vim / Emacs / Sublime
+*.swp
+*.swo
+*~
+\#*\#
+.\#*
+*.sublime-workspace
+*.sublime-project
+
+# Logs
+*.log
+logs/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Build / temp
+dist/
+build/
+output/
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Node / Next.js / monorepo
+node_modules/
+.turbo/
+*.tsbuildinfo
+coverage/
+
+# wiki-agent Run 记录（ADR 0014），含 Vault 全文与 reasoning，不进仓库
+.runs/
+
+# Playwright
+apps/*/playwright-report/
+apps/*/test-results/
