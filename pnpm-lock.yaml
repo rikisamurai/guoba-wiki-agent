@@ -145,6 +145,13 @@ importers:
         version: 5.0.5(@types/node@24.19.2)(vite@8.3.5(@types/node@24.19.2)(jiti@2.7.0)(yaml@2.9.1))
 
   packages/vault:
+    dependencies:
+      diff:
+        specifier: ^9.0.0
+        version: 9.0.0
+      yaml:
+        specifier: ^2.9.1
+        version: 2.9.1
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -917,6 +924,10 @@ packages:
   detect-libc@2.1.2:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
+
+  diff@9.0.0:
+    resolution: {integrity: sha512-svtcdpS8CgJyqAjEQIXdb3OjhFVVYjzGAPO8WGCmRbrml64SPw/jJD4GoE98aR7r25A0XcgrK3F02yw9R/vhQw==}
+    engines: {node: '>=0.3.1'}
 
   ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
@@ -2114,6 +2125,8 @@ snapshots:
 
   detect-libc@2.1.2: {}
 
+  diff@9.0.0: {}
+
   ecdsa-sig-formatter@1.0.11:
     dependencies:
       safe-buffer: 5.2.1
@@ -2566,5 +2579,4 @@ snapshots:
 
   ws@8.22.1: {}
 
-  yaml@2.9.1:
-    optional: true
+  yaml@2.9.1: {}
