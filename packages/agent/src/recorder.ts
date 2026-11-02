@@ -1,6 +1,7 @@
 import type { AgentEvent } from '@earendil-works/pi-agent-core'
 import { type AssistantMessage, type Model, calculateCost } from '@earendil-works/pi-ai'
 import type {
+  AnyTrajectoryEvent,
   AssistantBlock,
   StreamRecord,
   TokenUsage,
@@ -18,18 +19,28 @@ export class Recorder {
   readonly #writer: TrajectoryWriter
   readonly #now: () => number
   readonly #model: Model<any>
+  readonly #onEvent: ((event: AnyTrajectoryEvent) => void) | undefined
   #turn = -1
   #step = -1
   #stream: StreamRecord[] = []
 
-  constructor(writer: TrajectoryWriter, now: () => number, model: Model<any>) {
+  constructor(
+    writer: TrajectoryWriter,
+    now: () => number,
+    model: Model<any>,
+    onEvent?: (event: AnyTrajectoryEvent) => void,
+  ) {
     this.#writer = writer
     this.#now = now
     this.#model = model
+    this.#onEvent = onEvent
   }
 
+  /** 写入 Trajectory，写入后再通知观察者（例如终端进度）。 */
   emit<K extends TrajectoryEventType>(type: K, data: TrajectoryEventMap[K]): void {
-    this.#writer.append(type, data)
+    const event = this.#writer.append(type, data)
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- type 与 data 由同一个 K 约束，正是联合类型中的一支；TS 无法把泛型收窄到联合
+    this.#onEvent?.(event as AnyTrajectoryEvent)
   }
 
   get turn(): number {

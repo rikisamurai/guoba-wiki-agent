@@ -10,6 +10,7 @@ import {
   loadConfig,
   loadSkills,
   resolveConfig,
+  resolveModel,
   resolveTask,
   selectSkills,
   startRun,
@@ -102,6 +103,20 @@ describe('startRun', () => {
 
   it('rejects a Source above the size limit (ADR 0010)', () => {
     expect(() => start(SOURCE, 100)).toThrow(/超过上限 100/)
+  })
+})
+
+describe('resolveModel', () => {
+  it('checks provider, model id and API key before a Run starts', () => {
+    const key = { DEEPSEEK_API_KEY: 'test' }
+    expect(resolveModel({ provider: 'deepseek', id: 'deepseek-flash' }, key).model.id).toBe(
+      'deepseek-flash',
+    )
+    expect(() => resolveModel({ provider: 'openai', id: 'x' }, key)).toThrow(/DeepSeek/)
+    expect(() => resolveModel({ provider: 'deepseek', id: 'nope' }, key)).toThrow(/deepseek-flash/)
+    expect(() => resolveModel({ provider: 'deepseek', id: 'deepseek-flash' }, {})).toThrow(
+      /DEEPSEEK_API_KEY/,
+    )
   })
 })
 

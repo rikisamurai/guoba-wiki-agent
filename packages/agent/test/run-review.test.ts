@@ -76,6 +76,30 @@ describe('review', () => {
     await expect(run.revise('x')).rejects.toThrow(/ended/)
   })
 
+  it('cancels a Proposal waiting for review without recording a decision', async () => {
+    const { run, vault, events } = startFauxRun(validIngest())
+    const before = readVault(vault, 'index.md')
+    await run.execute()
+
+    run.cancel()
+
+    expect(run.state).toBe('ended')
+    expect(readVault(vault, 'index.md')).toBe(before)
+    expect(events().some((event) => event.type === 'review/decision')).toBe(false)
+    expect(events().at(-1)).toMatchObject({ type: 'run/end', data: { reason: 'cancelled' } })
+  })
+
+  it('reports every Trajectory Event to the observer in order', async () => {
+    const seen: number[] = []
+    const { run, events } = startFauxRun(validIngest(), {
+      onEvent: (event) => seen.push(event.seq),
+    })
+    await run.execute()
+    run.discard()
+
+    expect(seen).toEqual(events().map((event) => event.seq))
+  })
+
   it('only allows execute once', async () => {
     const { run } = startFauxRun(validIngest())
     await run.execute()

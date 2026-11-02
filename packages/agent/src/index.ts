@@ -12,7 +12,7 @@ export {
   resolveTask,
 } from './config.ts'
 export { FinishGate, type Validation, type Verdict, verdictText } from './finish.ts'
-export { DEFAULT_MODEL, createDeepseekModels } from './models.ts'
+export { DEFAULT_MODEL, createDeepseekModels, resolveModel } from './models.ts'
 export { RUN_RULES, buildSystemPrompt, formatLocalTime, taskMessage } from './prompt.ts'
 export { Run, type TurnResult, type TurnStatus, startRun } from './run.ts'
 export type { StartRunOptions } from './setup.ts'

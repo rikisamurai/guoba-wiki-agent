@@ -141,6 +141,8 @@ pnpm test          # faux + unit
 pnpm typecheck
 pnpm lint
 pnpm fmt
+pnpm wiki-agent run <source>   # 需要 DEEPSEEK_API_KEY；执行策略在 wiki-agent.config.ts
+pnpm wiki-agent view
 ```
 
 ## Agent skills

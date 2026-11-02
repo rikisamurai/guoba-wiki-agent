@@ -3,7 +3,7 @@ import path from 'node:path'
 
 import type { AgentTool, StreamFn } from '@earendil-works/pi-agent-core'
 import type { Model } from '@earendil-works/pi-ai'
-import type { JsonValue } from '@guoba-wiki-agent/trajectory'
+import type { AnyTrajectoryEvent, JsonValue } from '@guoba-wiki-agent/trajectory'
 import { createTrajectoryWriter } from '@guoba-wiki-agent/trajectory/node'
 import { Staging, readVaultText } from '@guoba-wiki-agent/vault'
 
@@ -31,6 +31,8 @@ export interface StartRunOptions {
   versions?: { wikiAgent: string | null }
   vaultGit?: { head: string; dirty: boolean } | null
   maxSourceChars?: number
+  /** 每写入一条 Trajectory Event 后调用，例如用于终端进度。 */
+  onEvent?: (event: AnyTrajectoryEvent) => void
 }
 
 export interface PreparedRun {
@@ -76,7 +78,7 @@ export function prepareRun(options: StartRunOptions): PreparedRun {
   const runDir = path.join(config.runsDir, runId)
   const writer = createTrajectoryWriter(path.join(runDir, 'trajectory.jsonl'), { now })
   const { model } = options
-  const recorder = new Recorder(writer, now, model)
+  const recorder = new Recorder(writer, now, model, options.onEvent)
   recorder.emit('run/start', {
     runId,
     taskSkill: task.name,

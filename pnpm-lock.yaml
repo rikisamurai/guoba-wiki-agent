@@ -26,6 +26,9 @@ importers:
 
   .:
     devDependencies:
+      '@guoba-wiki-agent/agent':
+        specifier: workspace:*
+        version: link:packages/agent
       '@types/node':
         specifier: 'catalog:'
         version: 24.19.2

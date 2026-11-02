@@ -117,8 +117,12 @@ export class Run {
     this.#end('discarded')
   }
 
-  /** 中止正在执行的 Turn。Vault 不受影响。 */
+  /** 中止正在执行的 Turn，或放弃等待确认的 Proposal（不记 review/decision）。Vault 不受影响。 */
   cancel(): void {
+    if (this.#state === 'ready') {
+      this.#end('cancelled')
+      return
+    }
     if (this.#state !== 'running') return
     this.#outcome ??= { status: 'cancelled' }
     this.#agent.abort()

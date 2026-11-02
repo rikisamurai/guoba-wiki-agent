@@ -16,7 +16,9 @@ v1 提供 `wiki-agent view` 命令：启动一个本地 HTTP 服务，同时提�
 
 - `GET /api/runs`：Run 列表（由各 Run 的 `run/start` 与 `run/end` 汇总而来）。
 - `GET /api/runs/:id/events?from=<seq>`：分页读取 Trajectory Event。
-- `GET /api/runs/:id/stream?from=<seq>`：SSE。持续读取文件新增的行，用于实时观察进行中的 Run。
+- `GET /api/runs/:id/stream?from=<seq>`：SSE。持续读取文件新增的行，用于实时观察进行中的 Run。每条消息的 `id` 是事件的 `seq`，断线重连时按 `Last-Event-ID` 续传；发出 `run/end` 后再发一条 `event: end` 并关闭连接。
+
+服务除了只监听 `127.0.0.1`，还校验请求的 `Host` 头只能是 `127.0.0.1` 或 `localhost`，防止外部网页借 DNS rebinding 读到 Trajectory（M4 实现时补充）。
 
 Run 进程只负责写文件，查看器服务只读文件，两者之间没有其他通信。查看器可以在 Run 进行中打开，也可以事后打开。
 

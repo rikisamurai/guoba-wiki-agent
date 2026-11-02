@@ -36,6 +36,7 @@ export function startFauxRun(
     tokensPerSecond?: number
     /** 美元 / 百万 token；faux 自己估算 token 数，费用由 wiki-agent 按价格计算。 */
     pricePerMillion?: number
+    onEvent?: (event: AnyTrajectoryEvent) => void
   } = {},
 ): Harness {
   const root = mkdtempSync(path.join(tmpdir(), 'agent-'))
@@ -85,6 +86,7 @@ export function startFauxRun(
     model: faux.getModel(),
     streamFn: models.streamSimple.bind(models),
     now: () => clock++,
+    ...(options.onEvent && { onEvent: options.onEvent }),
   })
   const events = () => {
     const parsed = readTrajectoryFile(path.join(run.dir, 'trajectory.jsonl')).events

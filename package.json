@@ -10,9 +10,11 @@
     "prepare": "simple-git-hooks",
     "test": "vitest run",
     "test:live": "vitest run --config vitest.live.config.ts",
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r typecheck",
+    "wiki-agent": "node apps/cli/src/main.ts"
   },
   "devDependencies": {
+    "@guoba-wiki-agent/agent": "workspace:*",
     "@types/node": "catalog:",
     "lint-staged": "^17.6.0",
     "oxfmt": "^0.75.0",
