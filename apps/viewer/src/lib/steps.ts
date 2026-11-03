@@ -68,6 +68,7 @@ export function toolTime(step: StepView): number {
 export function writeSummary(tool: ToolView): string {
   const last = tool.writes.at(-1)
   if (!last) return ''
+  if (last.op === 'revert') return '撤销改动'
   const created = tool.writes[0]?.beforeHash === null
   return `${created ? '新建' : '修改'} · ${last.bytes.toLocaleString('en-US')} 字节`
 }

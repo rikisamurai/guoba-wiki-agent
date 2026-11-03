@@ -38,6 +38,8 @@ export const AppendFileParams = Type.Object({
   text: Type.String({ description: '追加到文件末尾的文本（不会自动补换行）' }),
 })
 
+export const RevertFileParams = Type.Object({ path })
+
 export const ReadSkillParams = Type.Object({
   name: Type.String({ description: 'Skill Catalog 中的 Skill 名称' }),
 })

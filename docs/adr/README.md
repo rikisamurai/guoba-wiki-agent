@@ -20,3 +20,4 @@
 | [0016](0016-v1-完成标准与测试分层.md)         | v1 完成标准：faux 测试、真模型冒烟测试、3 份真实 Source 验收        |
 | [0017](0017-仓库结构.md)                      | monorepo：vault / trajectory / agent + cli / viewer                 |
 | [0018](0018-system-prompt-组成.md)            | System prompt：Run Rules → AGENT.md → Task Skill → Catalog → 时间   |
+| [0019](0019-撤销暂存改动.md)                  | `revert_file` 撤销单个文件的暂存改动；Vault 中的文件仍不能删除      |

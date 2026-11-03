@@ -15,4 +15,9 @@ export const RUN_RESULT: Record<RunEndReason | 'incomplete', { label: string; to
 }
 
 /** 会写入 Staging 的工具，用强调色显示。 */
-export const WRITE_TOOLS: ReadonlySet<string> = new Set(['write_file', 'edit_file', 'append_file'])
+export const WRITE_TOOLS: ReadonlySet<string> = new Set([
+  'write_file',
+  'edit_file',
+  'append_file',
+  'revert_file',
+])
