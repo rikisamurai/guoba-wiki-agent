@@ -1,10 +1,19 @@
-import { writeFileSync } from 'node:fs'
+import { existsSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
 import { buildLedger } from '@guoba-wiki-agent/trajectory'
 import { describe, expect, it } from 'vitest'
 
-import { PAGE, call, finish, messageText, readVault, startFauxRun, validIngest } from './harness.ts'
+import {
+  PAGE,
+  call,
+  finish,
+  messageText,
+  readVault,
+  startFauxRun,
+  validIngest,
+  wikiPage,
+} from './harness.ts'
 
 describe('review', () => {
   it('continues on the same Staging and conversation after Revise', async () => {
@@ -41,6 +50,33 @@ describe('review', () => {
       feedback: 'TL;DR 再短一点',
     })
     expect(ledger.turns[1]?.entries[0]).toMatchObject({ kind: 'user', source: 'revise' })
+  })
+
+  it('drops a page created earlier in the Run when Revise reverts it', async () => {
+    const extra = 'wiki/frontend/web-platform/obsidian-skills-extra.md'
+    const { run, vault, events } = startFauxRun([
+      call('write_file', {
+        path: extra,
+        content: wikiPage(['mutation-observer', 'resize-observer']),
+      }),
+      ...validIngest(),
+      call('revert_file', { path: extra }),
+      finish(),
+    ])
+    expect((await run.execute()).changes.map((change) => change.path)).toContain(extra)
+
+    const revised = await run.revise('把 extra 这页并进主页')
+
+    expect(revised.status).toBe('ready')
+    expect(revised.changes.map((change) => change.path)).not.toContain(extra)
+    expect(run.apply()).toMatchObject({ status: 'applied' })
+    expect(existsSync(path.join(vault, extra))).toBe(false)
+    expect(events()).toContainEqual(
+      expect.objectContaining({
+        type: 'staging/write',
+        data: expect.objectContaining({ path: extra, op: 'revert', afterHash: null }),
+      }),
+    )
   })
 
   it('shares the Step limit with the original Turn', async () => {

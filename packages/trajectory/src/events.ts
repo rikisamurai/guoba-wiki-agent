@@ -123,9 +123,11 @@ export interface TrajectoryEventMap {
   'staging/write': StepRef & {
     callId: string
     path: string
-    op: 'write' | 'edit' | 'append'
+    /** revert 撤销这个文件的全部暂存改动（ADR 0019）。 */
+    op: 'write' | 'edit' | 'append' | 'revert'
     beforeHash: string | null
-    afterHash: string
+    /** 撤销本次新建的文件后为 null。 */
+    afterHash: string | null
     bytes: number
   }
   'validation/result': StepRef & {

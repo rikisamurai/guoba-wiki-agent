@@ -55,6 +55,7 @@ _避免_：Pi 的 API 把这个单位叫作 `turn`（`finishTurn`、`turn_end`�
 
 **Staging**
 一次运行中 Agent 写入的内存暂存层。Agent 的读工具看到的是 Vault 叠加 Staging 后的视图；运行期间 Vault 本身不变。
+Agent 可以撤销单个文件的暂存改动，让它回到 Vault 中的状态；本次新建的文件因此不再出现在 Proposal 中。这不会删除 Vault 中的文件。
 
 **Proposal**
 运行结束时 Staging 相对 Vault 的全部变更（新建、修改的文件）。Proposal 本身不改动 Vault。

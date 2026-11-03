@@ -12,9 +12,10 @@ export class WriteScopeError extends Error {
 
 export interface WriteResult {
   path: string
-  op: 'write' | 'edit' | 'append'
+  op: 'write' | 'edit' | 'append' | 'revert'
   beforeHash: string | null
-  afterHash: string
+  /** 撤销本次新建的文件后为 null。 */
+  afterHash: string | null
   bytes: number
 }
 
@@ -74,6 +75,25 @@ export class Staging {
 
   append(relativePath: string, text: string): WriteResult {
     return this.#put(relativePath, 'append', (current) => (current ?? '') + text)
+  }
+
+  /**
+   * 撤销对这个文件的全部暂存改动，回到 Base（ADR 0019）。本次新建的文件因此从视图中消失；
+   * 结果总是 Base，所以不检查 Write Scope。
+   */
+  revert(relativePath: string): WriteResult {
+    const key = toVaultKey(this.#root, relativePath)
+    const entry = this.#entry(key)
+    if (entry.staged === undefined) throw new StagingError(`${key} 没有暂存的改动`)
+    const before = entry.staged
+    delete entry.staged
+    return {
+      path: key,
+      op: 'revert',
+      beforeHash: hashText(before),
+      afterHash: hashText(entry.base),
+      bytes: Buffer.byteLength(entry.base ?? ''),
+    }
   }
 
   /** 内容与 Base 不同的文件。写回原样的文件不算变更。 */

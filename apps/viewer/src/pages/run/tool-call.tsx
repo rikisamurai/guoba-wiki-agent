@@ -68,13 +68,13 @@ export function ToolCall({ tool, defaultOpen = false }: { tool: ToolView; defaul
             <>
               <div className="text-faint text-[11px]">Staging</div>
               {tool.writes.map((write) => (
-                <div key={write.afterHash + write.op} className="font-mono text-xs">
+                <div key={`${write.afterHash}${write.op}`} className="font-mono text-xs">
                   {write.op} · 写入前{' '}
                   <span className="text-muted">
                     {write.beforeHash ? shortHash(write.beforeHash) : '（新文件）'}
                   </span>
-                  {' → '}写入后 {shortHash(write.afterHash)} · {write.bytes.toLocaleString('en-US')}{' '}
-                  字节
+                  {' → '}写入后 {write.afterHash ? shortHash(write.afterHash) : '（已移除）'} ·{' '}
+                  {write.bytes.toLocaleString('en-US')} 字节
                 </div>
               ))}
             </>

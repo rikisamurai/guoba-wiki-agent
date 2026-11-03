@@ -8,6 +8,7 @@ import {
   GlobParams,
   GrepParams,
   ReadFileParams,
+  RevertFileParams,
   WriteFileParams,
 } from './schemas.ts'
 
@@ -109,5 +110,22 @@ export function vaultTools(
     execute: async (id, { path, text: appended }) => written(id, staging.append(path, appended)),
   }
 
-  return [readFile, glob, grep, writeFile, editFile, appendFile]
+  const revertFile: AgentTool<typeof RevertFileParams> = {
+    name: 'revert_file',
+    label: '撤销改动',
+    description:
+      '撤销本次对一个文件的全部暂存改动，恢复为 Vault 中的原状；本次新建的文件会被移除。合并页面或去掉不需要的页面时使用。',
+    parameters: RevertFileParams,
+    execute: async (id, { path }) => {
+      const result = staging.revert(path)
+      onWrite(id, result)
+      return text(
+        result.afterHash === null
+          ? `已撤销 ${result.path}，它不会出现在 Proposal 中`
+          : `已撤销 ${result.path} 的改动，恢复为 Vault 中的内容`,
+      )
+    },
+  }
+
+  return [readFile, glob, grep, writeFile, editFile, appendFile, revertFile]
 }

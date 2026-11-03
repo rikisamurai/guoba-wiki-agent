@@ -76,6 +76,27 @@ describe('Staging', () => {
     expect(staging.changes()).toEqual([{ path: 'wiki/new.md', base: null, next: 'x' }])
   })
 
+  it('reverts a file to its Base, so a new file leaves the view', () => {
+    const staging = new Staging(copyFixtureVault(), INGEST_SCOPE)
+    const original = staging.read(OVERLAY)
+    staging.write(OVERLAY, 'changed')
+    staging.write('wiki/new.md', 'x')
+
+    expect(staging.revert(OVERLAY)).toMatchObject({ op: 'revert', afterHash: hashText(original) })
+    expect(staging.revert('wiki/new.md')).toEqual({
+      path: 'wiki/new.md',
+      op: 'revert',
+      beforeHash: hashText('x'),
+      afterHash: null,
+      bytes: 0,
+    })
+    expect(staging.read(OVERLAY)).toBe(original)
+    expect(staging.read('wiki/new.md')).toBeNull()
+    expect(staging.list()).not.toContain('wiki/new.md')
+    expect(staging.changes()).toEqual([])
+    expect(() => staging.revert('wiki/new.md')).toThrow(/没有暂存的改动/)
+  })
+
   it('keeps the content from the first access as the Base', () => {
     const vault = copyFixtureVault()
     const staging = new Staging(vault, INGEST_SCOPE)
