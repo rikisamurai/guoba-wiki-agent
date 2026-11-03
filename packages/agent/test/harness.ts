@@ -15,7 +15,7 @@ import { readTrajectoryFile } from '@guoba-wiki-agent/trajectory/node'
 
 import { type Limits, type Run, resolveConfig, startRun } from '../src/index.ts'
 
-const FIXTURE_VAULT = path.resolve(import.meta.dirname, '../../../fixtures/vault')
+export const FIXTURE_VAULT = path.resolve(import.meta.dirname, '../../../fixtures/vault')
 
 export const SOURCE = 'sources/posts/obsidian/obsidian/obsidian-claude/skills.md'
 export const PAGE = 'wiki/frontend/web-platform/obsidian-skills.md'

@@ -4,6 +4,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     include: ['packages/*/test/**/*.live.ts'],
-    testTimeout: 180_000,
+    // 高于 Run 自身的 15 分钟上限（ADR 0012），超时由 Run 报告为 limit
+    testTimeout: 16 * 60_000,
   },
 })
